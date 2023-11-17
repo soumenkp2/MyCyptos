@@ -2,24 +2,31 @@ package com.example.mycyptos.presentation.topcrypto
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mycyptos.R
 import com.example.mycyptos.databinding.FragmentTopCryptoBinding
+import com.example.mycyptos.datamodels.Data
 import com.example.mycyptos.utils.AppConstants
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
+
 @AndroidEntryPoint
 class TopCryptoFragment : Fragment() {
 
-    private val viewModel: TopCryptoViewModel by viewModels()
+    //private val viewModel: TopCryptoViewModel by viewModels()
+    val viewModel: TopCryptoViewModel by lazy {
+        ViewModelProvider(requireActivity()).get(TopCryptoViewModel::class.java) }
+
     private lateinit var binding: FragmentTopCryptoBinding
     private lateinit var snackBarExitConfirmation: Snackbar
     private lateinit var pagingAdapter: TopCryptoPagingAdapter
@@ -35,7 +42,13 @@ class TopCryptoFragment : Fragment() {
     ): View? {
         binding = FragmentTopCryptoBinding.inflate(layoutInflater, container, false)
 
-        pagingAdapter = TopCryptoPagingAdapter()
+        pagingAdapter = TopCryptoPagingAdapter(object : ItemClickListener {
+            override fun onItemClick(data: Data) {
+                viewModel.selectedCrypto.postValue(data)
+                val action = TopCryptoFragmentDirections.actionTopCryptoFragmentToDetailCryptoFragment()
+                findNavController().navigate(action)
+            }
+        },"top")
         viewModel.getTopCryptoData()
         return binding.root
     }

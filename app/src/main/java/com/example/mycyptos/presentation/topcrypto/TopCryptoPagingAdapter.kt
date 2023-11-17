@@ -12,7 +12,7 @@ import com.example.mycyptos.datamodels.Data
 import com.squareup.picasso.Picasso
 
 
-class TopCryptoPagingAdapter() : PagingDataAdapter<Data,TopCryptoPagingAdapter.CryptoViewHolder>(CryptoDiffCallback()) {
+class TopCryptoPagingAdapter(private val listener: ItemClickListener, private val route: String) : PagingDataAdapter<Data,TopCryptoPagingAdapter.CryptoViewHolder>(CryptoDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CryptoViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -21,31 +21,66 @@ class TopCryptoPagingAdapter() : PagingDataAdapter<Data,TopCryptoPagingAdapter.C
     }
 
     override fun onBindViewHolder(holder: CryptoViewHolder, position: Int) {
-        val message = getItem(position)
-        message?.let {
-            holder.binding.apply {
-                tvCryptoName.text = it.symbol.toString()
-                tvCryptoFullname.text = it.name.toString()
+        val data = getItem(position)
 
-                val priceFloat = it.quote.USD.price.toFloat()
-                val formattedValue = String.format("%.2f", priceFloat)
-                tvCryptoValue.text = "$$formattedValue"
+        if(route.equals("top")) {
+            data?.let {
+                holder.binding.apply {
+                    tvCryptoName.text = it.symbol.toString()
+                    tvCryptoFullname.text = it.name.toString()
 
-                val priceChangeInt = it.quote.USD.percent_change_24h.toFloat()
-                val formattedChangeValue = String.format("%.2f", priceChangeInt)
-                tvChange.text = "$formattedChangeValue%"
+                    val priceFloat = it.quote.USD.price.toFloat()
+                    val formattedValue = String.format("%.2f", priceFloat)
+                    tvCryptoValue.text = "$$formattedValue"
 
-                if(priceChangeInt>0) {
-                    holder.binding.tvChange.setTextColor(Color.parseColor("#00AE07"))
-                    holder.binding.ivGraph.setImageResource(R.drawable.green_inc)
-                } else {
-                    holder.binding.tvChange.setTextColor(Color.parseColor("#FFF44336"))
-                    holder.binding.ivGraph.setImageResource(R.drawable.reddec)
+                    val priceChangeInt = it.quote.USD.percent_change_24h.toFloat()
+                    val formattedChangeValue = String.format("%.2f", priceChangeInt)
+                    tvChange.text = "$formattedChangeValue%"
+
+                    if(priceChangeInt>0) {
+                        holder.binding.tvChange.setTextColor(Color.parseColor("#00AE07"))
+                        holder.binding.ivGraph.setImageResource(R.drawable.green_inc)
+                    } else {
+                        holder.binding.tvChange.setTextColor(Color.parseColor("#FFF44336"))
+                        holder.binding.ivGraph.setImageResource(R.drawable.reddec)
+                    }
+
+                    Picasso.get().load("https://s2.coinmarketcap.com/static/img/coins/64x64/${it.id}.png").into(holder.binding.ivBtc)
+                    holder.binding.itemParent.setOnClickListener {
+                        listener.onItemClick(data)
+                    }
                 }
+            }
+        } else {
+            data?.let {
+                holder.binding.apply {
+                    tvCryptoName.text = it.symbol.toString()
+                    tvCryptoFullname.text = it.name.toString()
 
-                Picasso.get().load("https://s2.coinmarketcap.com/static/img/coins/64x64/${it.id}.png").into(holder.binding.ivBtc)
+                    val priceFloat = it.quote.USD.price.toFloat()
+                    val formattedValue = String.format("%.2f", priceFloat)
+                    tvCryptoValue.text = "$$formattedValue"
+
+                    val priceChangeInt = it.quote.USD.percent_change_24h.toFloat()
+                    val formattedChangeValue = String.format("%.2f", priceChangeInt)
+                    tvChange.text = "$formattedChangeValue%"
+
+                    if(priceChangeInt>0) {
+                        holder.binding.tvChange.setTextColor(Color.parseColor("#00AE07"))
+                        holder.binding.ivGraph.setImageResource(R.drawable.green_inc)
+                    } else {
+                        holder.binding.tvChange.setTextColor(Color.parseColor("#FFF44336"))
+                        holder.binding.ivGraph.setImageResource(R.drawable.reddec)
+                    }
+
+                    Picasso.get().load("https://s2.coinmarketcap.com/static/img/coins/64x64/${it.id}.png").into(holder.binding.ivBtc)
+                    holder.binding.itemParent.setOnClickListener {
+                        listener.onItemClick(data)
+                    }
+                }
             }
         }
+
     }
 
     class CryptoViewHolder(val binding: ItemCryptoBinding) : RecyclerView.ViewHolder(binding.root) {}
@@ -61,6 +96,10 @@ class TopCryptoPagingAdapter() : PagingDataAdapter<Data,TopCryptoPagingAdapter.C
         }
     }
 
+}
+
+interface ItemClickListener {
+    fun onItemClick(data : Data)
 }
 
 

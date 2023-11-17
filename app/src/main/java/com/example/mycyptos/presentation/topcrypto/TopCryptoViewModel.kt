@@ -30,6 +30,8 @@ class TopCryptoViewModel @Inject constructor(private val topCryptoUsecase: TopCr
     val _dataLoaded = MutableLiveData<Boolean>(false)
     val dataLoaded : LiveData<Boolean> get() = _dataLoaded
 
+    val selectedCrypto = MutableLiveData<Data>()
+
     fun getTopCryptoData() = viewModelScope.launch(Dispatchers.IO) {
         viewModelScope.launch {
             val messageSource = topCryptoUsecase.invoke()

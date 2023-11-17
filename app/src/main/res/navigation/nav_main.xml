@@ -3,21 +3,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_main"
-    app:startDestination="@id/topCryptoFragment">
+    app:startDestination="@id/favCryptoFragment">
 
     <fragment
         android:id="@+id/favCryptoFragment"
         android:name="com.example.mycyptos.presentation.favcrypto.FavCryptoFragment"
         android:label="fragment_fav_crypto"
         tools:layout="@layout/fragment_fav_crypto" />
+
     <fragment
         android:id="@+id/topCryptoFragment"
         android:name="com.example.mycyptos.presentation.topcrypto.TopCryptoFragment"
         android:label="fragment_top_crypto"
-        tools:layout="@layout/fragment_top_crypto" />
+        tools:layout="@layout/fragment_top_crypto" >
+        <action
+            android:id="@+id/action_topCryptoFragment_to_detailCryptoFragment"
+            app:destination="@id/detailCryptoFragment">
+        </action>
+    </fragment>
+
     <fragment
         android:id="@+id/searchCryptoFragment"
         android:name="com.example.mycyptos.presentation.searchcrypto.SearchCryptoFragment"
         android:label="fragment_search_crypto"
         tools:layout="@layout/fragment_search_crypto" />
+
+    <fragment
+        android:id="@+id/detailCryptoFragment"
+        android:name="com.example.mycyptos.presentation.DetailCryptoFragment"
+        android:label="fragment_detail_crypto"
+        tools:layout="@layout/fragment_detail_crypto">
+    </fragment>
 </navigation>
