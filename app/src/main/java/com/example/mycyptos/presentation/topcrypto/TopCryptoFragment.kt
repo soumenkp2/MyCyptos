@@ -1,6 +1,7 @@
 package com.example.mycyptos.presentation.topcrypto
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -50,7 +51,29 @@ class TopCryptoFragment : Fragment() {
             pagingAdapter.submitData(lifecycle,it)
             binding.rvTopCrypto.adapter = pagingAdapter
             pagingAdapter.notifyDataSetChanged()
+
+            viewModel.getTopRankedCryptoData()
+
+            if(viewModel.pagingData.value!=null) {
+                Log.d("api ui dataLoaded",viewModel.pagingData.value.toString() + viewModel._dataLoaded.value)
+                viewModel._dataLoaded.postValue(true)
+            }
             snackbar.dismiss()
+        })
+
+        viewModel._dataLoaded.observe(viewLifecycleOwner, Observer {
+            if(it) {
+                viewModel.getTopRankedCryptoData()
+            }
+        })
+
+        viewModel.topRankedCryptoData.observe(viewLifecycleOwner, Observer {
+            if(it!=null) {
+                binding.tvCryptoName.text = it.symbol.toString()
+                binding.tvCryptoFullname.text = it.name.toString()
+            } else {
+
+            }
         })
 
         setUpBackPress()

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/topCryptoFragment"
+        android:icon="@drawable/top_crypto"
+        android:iconTint="@color/white"
+        android:title="Top Crypto"/>
+
+    <item
+        android:id="@+id/searchCryptoFragment"
+        android:icon="@drawable/metaverse"
+        android:iconTint="@color/white"
+        android:title="Search"/>
+
+    <item
+        android:id="@+id/favCryptoFragment"
+        android:icon="@drawable/fav_crypto"
+        android:iconTint="@color/white"
+        android:title="Favourites"/>
+
+</menu>

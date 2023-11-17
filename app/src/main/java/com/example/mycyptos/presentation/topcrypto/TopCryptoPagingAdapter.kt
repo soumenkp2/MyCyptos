@@ -1,12 +1,15 @@
 package com.example.mycyptos.presentation.topcrypto
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mycyptos.R
 import com.example.mycyptos.databinding.ItemCryptoBinding
 import com.example.mycyptos.datamodels.Data
+import com.squareup.picasso.Picasso
 
 
 class TopCryptoPagingAdapter() : PagingDataAdapter<Data,TopCryptoPagingAdapter.CryptoViewHolder>(CryptoDiffCallback()) {
@@ -21,7 +24,26 @@ class TopCryptoPagingAdapter() : PagingDataAdapter<Data,TopCryptoPagingAdapter.C
         val message = getItem(position)
         message?.let {
             holder.binding.apply {
-                tvCryptoName.text = it.name.toString()
+                tvCryptoName.text = it.symbol.toString()
+                tvCryptoFullname.text = it.name.toString()
+
+                val priceFloat = it.quote.USD.price.toFloat()
+                val formattedValue = String.format("%.2f", priceFloat)
+                tvCryptoValue.text = "$$formattedValue"
+
+                val priceChangeInt = it.quote.USD.percent_change_24h.toFloat()
+                val formattedChangeValue = String.format("%.2f", priceChangeInt)
+                tvChange.text = "$formattedChangeValue%"
+
+                if(priceChangeInt>0) {
+                    holder.binding.tvChange.setTextColor(Color.parseColor("#00AE07"))
+                    holder.binding.ivGraph.setImageResource(R.drawable.green_inc)
+                } else {
+                    holder.binding.tvChange.setTextColor(Color.parseColor("#FFF44336"))
+                    holder.binding.ivGraph.setImageResource(R.drawable.reddec)
+                }
+
+                Picasso.get().load("https://s2.coinmarketcap.com/static/img/coins/64x64/${it.id}.png").into(holder.binding.ivBtc)
             }
         }
     }
