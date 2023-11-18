@@ -1,5 +1,6 @@
 package com.example.mycyptos.paging
 
+import android.content.Context
 import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
@@ -10,12 +11,14 @@ import com.example.mycyptos.utils.AppConstants
 import javax.inject.Inject
 
 class CryptoPagingSource @Inject constructor(
-    val apiService: CryptoApiService
+    val apiService: CryptoApiService,val route: String, val context: Context
 ) : PagingSource<Int,Data>() {
 
     private lateinit var cryptoData: CryptoData
     private lateinit var cryptoDataList: List<Data>
     private var topRankedCryptoData: Data ?= null
+    private var mutableSortedDataList: MutableList<Data> ?= mutableListOf()
+    private var sortedDataList : List<Data> = listOf()
 
     /**
      * Fetches paginated messages from the remote API based on the provided parameters.
@@ -31,13 +34,26 @@ class CryptoPagingSource @Inject constructor(
             cryptoData = response
             cryptoDataList = cryptoData.data
             Log.d("api response",response.data.toString())
-            topRankedCryptoData = evaluateTopRankedCrypto(cryptoDataList)
-            Log.d("api response top",topRankedCryptoData.toString())
+
+            if(route.equals(route.equals(AppConstants.all_crypto_list_key))) {
+                sortedDataList = cryptoDataList
+            }
+            else if(route.equals(AppConstants.fav_crypto_list_key)) {
+                mutableSortedDataList = getFavCryptoList(cryptoDataList,context)
+                sortedDataList = mutableSortedDataList!!
+            }
+            else if(route.equals(AppConstants.first_crypto_key)) {
+                topRankedCryptoData = evaluateTopRankedCrypto(cryptoDataList)
+                mutableSortedDataList?.add(topRankedCryptoData!!)
+                sortedDataList = mutableSortedDataList!!
+            }
+
             LoadResult.Page(
-                data = cryptoDataList,
+                data = sortedDataList,
                 prevKey = if (page == 1) null else page - 1,
-                nextKey = if (cryptoDataList.isEmpty() || (page*params.loadSize)>=cryptoDataList.size) null else page + 1
+                nextKey = if (sortedDataList.isEmpty() || (page*params.loadSize)>=sortedDataList.size) null else page + 1
             )
+
         } catch (e: Exception) {
             Log.d("api response error",e.toString())
             LoadResult.Error(e)
@@ -55,6 +71,37 @@ class CryptoPagingSource @Inject constructor(
             val anchorPage = state.closestPageToPosition(anchorPosition)
             anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
         }
+    }
+
+    fun getFavCryptoList(cryptoDataList: List<Data>, context: Context) : MutableList<Data>?{
+        val sharedPreferences = context?.getSharedPreferences("mySharedPreferences", Context.MODE_PRIVATE)
+        var value = sharedPreferences?.getString("fav","")
+        val editor = sharedPreferences?.edit()
+        val mutableCryptoList : MutableList<Data> = mutableListOf()
+
+        val mutableSet : MutableSet<String> = mutableSetOf()
+        if (value != null) {
+            var symbol = ""
+            value.forEach { char ->
+                if(char.equals(',')) {
+                    mutableSet.add(symbol)
+                    symbol = ""
+                } else {
+                    symbol += char
+                }
+            }
+        }
+
+        cryptoDataList.forEach {
+            val cryptoData = it
+            mutableSet.forEach {
+                if(it.equals(cryptoData.symbol.toString())) {
+                    mutableCryptoList?.add(cryptoData)
+                }
+            }
+        }
+
+        return mutableCryptoList
     }
 
     fun evaluateTopRankedCrypto(cryptoDataList: List<Data>) : Data? {

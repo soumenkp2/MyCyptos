@@ -15,7 +15,7 @@ import com.example.mycyptos.R
 import com.example.mycyptos.databinding.ActivityMainBinding.inflate
 import com.example.mycyptos.databinding.FragmentFavCryptoBinding
 import com.example.mycyptos.datamodels.Data
-import com.example.mycyptos.presentation.topcrypto.ItemClickListener
+import com.example.mycyptos.presentation.favcrypto.ItemClickListener
 import com.example.mycyptos.presentation.topcrypto.TopCryptoFragmentDirections
 import com.example.mycyptos.presentation.topcrypto.TopCryptoPagingAdapter
 import com.example.mycyptos.presentation.topcrypto.TopCryptoViewModel
@@ -23,9 +23,9 @@ import com.example.mycyptos.presentation.topcrypto.TopCryptoViewModel
 class FavCryptoFragment : Fragment() {
 
     private lateinit var binding: FragmentFavCryptoBinding
-    private lateinit var pagingAdapter: TopCryptoPagingAdapter
-    val viewModel: TopCryptoViewModel by lazy {
-        ViewModelProvider(requireActivity()).get(TopCryptoViewModel::class.java) }
+    private lateinit var pagingAdapter: FavCryptoPagingAdapter
+    val viewModel: FavCryptoViewModel by lazy {
+        ViewModelProvider(requireActivity()).get(FavCryptoViewModel::class.java) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,14 +39,13 @@ class FavCryptoFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentFavCryptoBinding.inflate(inflater, container,false)
 
-        val sharedPreferences = context?.getSharedPreferences("mySharedPreferences", Context.MODE_PRIVATE)
-        val value = sharedPreferences?.getString("fav","")
+        pagingAdapter = FavCryptoPagingAdapter(object : ItemClickListener {
+            override fun onItemClick(data: Data) {
 
-        pagingAdapter = value?.let {
-            TopCryptoPagingAdapter(object : ItemClickListener {
-                override fun onItemClick(data: Data) {}
-            }, it)
-        }!!
+            }
+        })
+        viewModel.getFavCryptoData()
+
 
         return binding.root
     }

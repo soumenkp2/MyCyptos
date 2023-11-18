@@ -48,7 +48,7 @@ class TopCryptoFragment : Fragment() {
                 val action = TopCryptoFragmentDirections.actionTopCryptoFragmentToDetailCryptoFragment()
                 findNavController().navigate(action)
             }
-        },"top")
+        })
         viewModel.getTopCryptoData()
         return binding.root
     }

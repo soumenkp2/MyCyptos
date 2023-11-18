@@ -49,6 +49,11 @@ object AppDependencyModule {
         return CryptoServiceRepositoryImplementation(api)
     }
 
+    @Singleton
+    @Provides
+    fun provideApplicationContext(@ApplicationContext context: Context): Context {
+        return context
+    }
 
 
 }

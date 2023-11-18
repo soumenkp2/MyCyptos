@@ -1,4 +1,4 @@
-package com.example.mycyptos.presentation.topcrypto
+package com.example.mycyptos.presentation.favcrypto
 
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -11,8 +11,7 @@ import com.example.mycyptos.databinding.ItemCryptoBinding
 import com.example.mycyptos.datamodels.Data
 import com.squareup.picasso.Picasso
 
-
-class TopCryptoPagingAdapter(private val listener: ItemClickListener) : PagingDataAdapter<Data,TopCryptoPagingAdapter.CryptoViewHolder>(CryptoDiffCallback()) {
+class FavCryptoPagingAdapter(private val listener: ItemClickListener) : PagingDataAdapter<Data, FavCryptoPagingAdapter.CryptoViewHolder>(CryptoDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CryptoViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -50,6 +49,7 @@ class TopCryptoPagingAdapter(private val listener: ItemClickListener) : PagingDa
                 }
             }
         }
+
 
     }
 
