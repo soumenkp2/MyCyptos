@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/topCryptoFragment"
+        android:id="@+id/topCryptoFragment_menu"
         android:icon="@drawable/top_crypto"
-        android:iconTint="@color/white"
+        app:itemTextColor="@color/white"
+        android:iconTint="@color/black"
         android:title="Top Crypto"/>
 
     <item
-        android:id="@+id/searchCryptoFragment"
+        android:id="@+id/searchCryptoFragment_menu"
         android:icon="@drawable/metaverse"
+        app:itemTextColor="@color/white"
         android:iconTint="@color/white"
         android:title="Search"/>
 
     <item
-        android:id="@+id/favCryptoFragment"
+        android:id="@+id/favCryptoFragment_menu"
         android:icon="@drawable/fav_crypto"
+        app:itemTextColor="@color/white"
         android:iconTint="@color/white"
         android:title="Favourites"/>
 

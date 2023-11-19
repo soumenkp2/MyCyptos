@@ -17,6 +17,7 @@ import com.example.mycyptos.databinding.FragmentTopCryptoBinding
 import com.example.mycyptos.datamodels.Data
 import com.example.mycyptos.utils.AppConstants
 import com.google.android.material.snackbar.Snackbar
+import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -30,6 +31,7 @@ class TopCryptoFragment : Fragment() {
     private lateinit var binding: FragmentTopCryptoBinding
     private lateinit var snackBarExitConfirmation: Snackbar
     private lateinit var pagingAdapter: TopCryptoPagingAdapter
+    private var mList : MutableList<Data> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +63,7 @@ class TopCryptoFragment : Fragment() {
 
         viewModel.pagingData.observe(viewLifecycleOwner, Observer {
             binding.rvTopCrypto.layoutManager = LinearLayoutManager(context)
+            Log.d("api ui pageLoaded",it.toString())
             pagingAdapter.submitData(lifecycle,it)
             binding.rvTopCrypto.adapter = pagingAdapter
             pagingAdapter.notifyDataSetChanged()
@@ -89,7 +92,36 @@ class TopCryptoFragment : Fragment() {
             }
         })
 
+        viewModel.getCryptoListData()
+        viewModel.cryptoListData.observe(viewLifecycleOwner, Observer{
+            it.forEach {
+                mList.add(it)
+            }
+            setBannerData(mList[0])
+        })
+
+        binding.etSearch.setOnClickListener {
+            val action = TopCryptoFragmentDirections.actionTopCryptoFragmentToSearchCryptoFragment()
+            findNavController().navigate(action)
+        }
+
         setUpBackPress()
+    }
+
+    private fun setBannerData(data : Data) {
+        binding.tvCryptoName.text = data.symbol.toString()
+        binding.tvCryptoFullname.text = data.name.toString()
+
+        val priceFloat = data.quote.USD.price.toFloat()
+        val formattedValue = String.format("%.2f", priceFloat)
+        binding.tvCryptoValue.text = "$$formattedValue"
+
+        val priceChangeInt = data.quote.USD.percent_change_24h.toFloat()
+        val formattedChangeValue = String.format("%.2f", priceChangeInt)
+        binding.tvCryptoChangeValue.text = "$formattedChangeValue%"
+
+        Picasso.get().load("https://s2.coinmarketcap.com/static/img/coins/64x64/${data.id}.png").into(binding.ivBtc)
+
     }
 
     private fun setUpBackPress() {

@@ -1,6 +1,7 @@
 package com.example.mycyptos.data.repository
 
 import android.content.Context
+import android.util.Log
 import androidx.paging.PagingSource
 import com.example.mycyptos.data.apiservice.CryptoApiService
 import com.example.mycyptos.datamodels.Data
@@ -20,6 +21,21 @@ class CryptoServiceRepositoryImplementation @Inject constructor(private val apiS
 
     override suspend fun getFavCryptoData(context: Context): PagingSource<Int, Data> {
         return CryptoPagingSource(apiService,AppConstants.fav_crypto_list_key,context)
+    }
+
+    override suspend fun getCryptoList(): List<Data> {
+        var cryptoDataList : List<Data> ?= listOf()
+
+        try {
+            val response = apiService.getCryptoDataList(AppConstants.API_KEY,AppConstants.sort,AppConstants.sort_dir)
+            cryptoDataList = response.data
+            Log.d("api response",response.data.toString())
+            return cryptoDataList
+
+        } catch (e: Exception) {
+            Log.d("api response error",e.toString())
+            return cryptoDataList!!
+        }
     }
 
 }

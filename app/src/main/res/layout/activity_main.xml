@@ -30,13 +30,15 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:id="@+id/bottomNavigationBar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:menu="@menu/nav_menu"
         android:background="@drawable/bg_white_circular"
+        app:itemTextColor="@color/white"
+        app:itemIconTint="#FFEB3B"
         app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

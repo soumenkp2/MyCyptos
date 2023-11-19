@@ -34,8 +34,9 @@ class CryptoPagingSource @Inject constructor(
             cryptoData = response
             cryptoDataList = cryptoData.data
             Log.d("api response",response.data.toString())
+            Log.d("api route", route + AppConstants.all_crypto_list_key)
 
-            if(route.equals(route.equals(AppConstants.all_crypto_list_key))) {
+            if(route.equals(AppConstants.all_crypto_list_key)) {
                 sortedDataList = cryptoDataList
             }
             else if(route.equals(AppConstants.fav_crypto_list_key)) {
@@ -48,6 +49,7 @@ class CryptoPagingSource @Inject constructor(
                 sortedDataList = mutableSortedDataList!!
             }
 
+            Log.d("api sorted list", sortedDataList.toString())
             LoadResult.Page(
                 data = sortedDataList,
                 prevKey = if (page == 1) null else page - 1,

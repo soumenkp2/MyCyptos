@@ -15,7 +15,9 @@ import com.example.mycyptos.domain.TopCryptoUsecase
 import com.example.mycyptos.paging.DataCallback
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.util.concurrent.Flow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,6 +33,9 @@ class TopCryptoViewModel @Inject constructor(private val topCryptoUsecase: TopCr
     val dataLoaded : LiveData<Boolean> get() = _dataLoaded
 
     val selectedCrypto = MutableLiveData<Data>()
+
+    private val _cryptoListData = MutableLiveData<List<Data>>()
+    val cryptoListData: LiveData<List<Data>> get() = _cryptoListData
 
     fun getTopCryptoData() = viewModelScope.launch(Dispatchers.IO) {
         viewModelScope.launch {
@@ -59,6 +64,10 @@ class TopCryptoViewModel @Inject constructor(private val topCryptoUsecase: TopCr
                 _topRankedCryptoData.postValue(data)
             }
         })
+    }
+
+    fun getCryptoListData() = viewModelScope.launch(Dispatchers.IO) {
+        _cryptoListData.postValue(topCryptoUsecase.getCryptoListData())
     }
 
 }

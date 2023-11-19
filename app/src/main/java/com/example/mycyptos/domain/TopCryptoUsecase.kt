@@ -20,6 +20,10 @@ class TopCryptoUsecase @Inject constructor(private val cryptoServiceRepository: 
         }
     }
 
+    suspend fun getCryptoListData() : List<Data> {
+        return cryptoServiceRepository.getCryptoList()
+    }
+
     suspend fun getTopRankedCryptoData(dataCallback: DataCallback) : Data? {
         Log.d("api usecase data",cryptoServiceRepository.getTopRankedCryptoData(dataCallback,context).toString())
         return cryptoServiceRepository.getTopRankedCryptoData(dataCallback,context)

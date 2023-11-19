@@ -1,11 +1,8 @@
-package com.example.mycyptos.presentation.topcrypto
+package com.example.mycyptos.presentation.searchcrypto
 
 import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.paging.PagingDataAdapter
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mycyptos.R
 import com.example.mycyptos.databinding.ItemCryptoBinding
@@ -13,23 +10,29 @@ import com.example.mycyptos.datamodels.Data
 import com.squareup.picasso.Picasso
 
 
-class TopCryptoPagingAdapter(private val listener: ItemClickListener) : PagingDataAdapter<Data,TopCryptoPagingAdapter.CryptoViewHolder>(CryptoDiffCallback()) {
+class SearchCryptoAdapter(var dataList: List<Data>) :
+    RecyclerView.Adapter<SearchCryptoAdapter.DataViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CryptoViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding = ItemCryptoBinding.inflate(inflater, parent, false)
-        return CryptoViewHolder(binding)
+    class DataViewHolder(val binding: ItemCryptoBinding) : RecyclerView.ViewHolder(binding.root) {}
+
+    fun setFilteredList(mList: List<Data>){
+        this.dataList = mList
+        notifyDataSetChanged()
     }
 
-    override fun onBindViewHolder(holder: CryptoViewHolder, position: Int) {
-        val data = getItem(position)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        val binding = ItemCryptoBinding.inflate(inflater, parent, false)
+        return DataViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: DataViewHolder, position: Int) {
+        val data = dataList.get(position)
 
         data?.let {
             holder.binding.apply {
                 tvCryptoName.text = it.symbol.toString()
                 tvCryptoFullname.text = it.name.toString()
-
-                Log.d("api symbol",it.symbol.toString())
 
                 val priceFloat = it.quote.USD.price.toFloat()
                 val formattedValue = String.format("%.2f", priceFloat)
@@ -48,32 +51,13 @@ class TopCryptoPagingAdapter(private val listener: ItemClickListener) : PagingDa
                 }
 
                 Picasso.get().load("https://s2.coinmarketcap.com/static/img/coins/64x64/${it.id}.png").into(holder.binding.ivBtc)
-                holder.binding.itemParent.setOnClickListener {
-                    listener.onItemClick(data)
-                }
+
             }
         }
 
     }
 
-    class CryptoViewHolder(val binding: ItemCryptoBinding) : RecyclerView.ViewHolder(binding.root) {}
-
-    // DiffCallback to efficiently update items in the RecyclerView
-    private class CryptoDiffCallback : DiffUtil.ItemCallback<Data>() {
-        override fun areItemsTheSame(oldItem: Data, newItem: Data): Boolean {
-            return oldItem.id == newItem.id // Use a unique identifier for items
-        }
-
-        override fun areContentsTheSame(oldItem: Data, newItem: Data): Boolean {
-            return oldItem == newItem // Check if the items have the same content
-        }
+    override fun getItemCount(): Int {
+        return dataList.size
     }
-
 }
-
-interface ItemClickListener {
-    fun onItemClick(data : Data)
-}
-
-
-

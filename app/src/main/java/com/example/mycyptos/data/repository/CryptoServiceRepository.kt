@@ -12,4 +12,6 @@ interface CryptoServiceRepository {
     suspend fun getTopRankedCryptoData(dataCallback: DataCallback,context: Context) : Data?
 
     suspend fun getFavCryptoData(context: Context) : PagingSource<Int, Data>
+
+    suspend fun getCryptoList(): List<Data>
 }
