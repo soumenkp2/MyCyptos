@@ -1,6 +1,8 @@
 package com.example.mycyptos.utils
 
 import android.view.View
+import android.widget.LinearLayout
+import android.widget.ProgressBar
 import com.google.android.material.snackbar.Snackbar
 
 class AppConstants {
@@ -18,5 +20,6 @@ class AppConstants {
         fun snackBarTemplate(view: View, text: String): Snackbar {
             return Snackbar.make(view,text, Snackbar.LENGTH_INDEFINITE)
         }
+
     }
 }

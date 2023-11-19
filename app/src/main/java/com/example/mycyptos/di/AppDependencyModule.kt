@@ -21,6 +21,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppDependencyModule {
 
+    // Provides a singleton instance of CryptoApiService
     @Provides
     @Singleton
     fun provideMessageApi(
@@ -43,12 +44,14 @@ object AppDependencyModule {
         return retrofit.create(CryptoApiService::class.java)
     }
 
+    // Provides a singleton instance of CryptoServiceRepository
     @Provides
     @Singleton
     fun provideMessageServiceRepository(api: CryptoApiService): CryptoServiceRepository {
         return CryptoServiceRepositoryImplementation(api)
     }
 
+    // Provides the application context
     @Singleton
     @Provides
     fun provideApplicationContext(@ApplicationContext context: Context): Context {

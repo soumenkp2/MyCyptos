@@ -34,7 +34,6 @@ class CryptoPagingSource @Inject constructor(
             cryptoData = response
             cryptoDataList = cryptoData.data
             Log.d("api response",response.data.toString())
-            Log.d("api route", route + AppConstants.all_crypto_list_key)
 
             if(route.equals(AppConstants.all_crypto_list_key)) {
                 sortedDataList = cryptoDataList

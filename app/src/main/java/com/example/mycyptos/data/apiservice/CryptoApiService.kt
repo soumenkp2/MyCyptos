@@ -7,7 +7,12 @@ import retrofit2.http.Query
 
 interface CryptoApiService {
 
-    //https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?CMC_PRO_API_KEY=ff868612-5cfe-49f2-8e53-7fb6d5dc54fd&sort=price&sort_dir=desc
+    /**
+     * Retrofit function for making a GET request to the cryptocurrency data API.
+     * Endpoint: "v1/cryptocurrency/listings/latest"
+     * Parameters: apiKey - API key for authentication, sort - Sorting criteria, sortDir - Sorting direction (e.g., ascending or descending)
+     * Returns: CryptoData object representing the API response.
+     */
     @GET("v1/cryptocurrency/listings/latest")
     suspend fun getCryptoDataList(
         @Query("CMC_PRO_API_KEY") CMC_PRO_API_KEY : String,

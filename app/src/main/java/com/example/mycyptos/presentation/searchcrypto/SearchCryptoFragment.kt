@@ -20,7 +20,24 @@ import com.example.mycyptos.datamodels.Data
 import com.example.mycyptos.presentation.topcrypto.TopCryptoViewModel
 import java.util.Locale
 
-
+/**
+ * Fragment allowing users to search and filter through a list of cryptocurrencies.
+ * Utilizes the TopCryptoViewModel for data retrieval and updates.
+ *
+ * Properties:
+ * - viewModel: Lazy-initialized instance of TopCryptoViewModel for handling cryptocurrency data.
+ * - binding: View binding for the fragment layout.
+ * - recyclerView: RecyclerView for displaying the list of cryptocurrencies.
+ * - searchView: SearchView for user input to filter the list.
+ * - mList: ArrayList to store the original list of cryptocurrencies.
+ * - adapter: Adapter for displaying the filtered list of cryptocurrencies.
+ *
+ * Methods:
+ * - onCreateView: Inflates the fragment layout, initializes UI components, and sets up the search functionality.
+ * - filterList: Filters the original list of Data objects based on the provided query.
+ *   If the query is not null, it iterates through the original list and adds items whose names contain the query (case-insensitive) to a new filtered list.
+ *   If the filtered list is not empty, it updates the adapter with the filtered data; otherwise, no data is displayed.
+ */
 class SearchCryptoFragment : Fragment() {
 
     val viewModel: TopCryptoViewModel by lazy {
@@ -74,6 +91,12 @@ class SearchCryptoFragment : Fragment() {
         return binding.root
     }
 
+    /**
+     * Filters the original list of Data objects based on the provided query.
+     * @param query: The search query to filter the list.
+     * If the query is not null, it iterates through the original list and adds items whose names contain the query (case-insensitive) to a new filtered list.
+     * If the filtered list is not empty, it updates the adapter with the filtered data; otherwise, no data is displayed.
+     */
     private fun filterList(query: String?) {
 
         if (query != null) {
